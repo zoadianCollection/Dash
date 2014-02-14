@@ -10,7 +10,7 @@ import math.transform, math.vector, math.quaternion;
 
 import yaml;
 
-import std.signals, std.conv, std.variant;
+import std.conv, std.variant;
 
 class GameObject
 {
@@ -35,8 +35,6 @@ public:
 	 * All of the objects which list this as parent
 	 */
 	mixin Property!( "GameObject[]", "children" );
-
-	mixin Signal!( string, string );
 
 	/**
 	 * Create a GameObject from a Yaml node.

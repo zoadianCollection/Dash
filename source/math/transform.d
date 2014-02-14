@@ -2,7 +2,7 @@ module math.transform;
 import core.properties, core.gameobject;
 import math.vector, math.matrix, math.quaternion;
 
-import std.signals, std.conv;
+import std.conv;
 
 class Transform
 {
@@ -72,8 +72,6 @@ public:
 			return owner.parent.transform.matrix * _matrix;
 	}
 
-	mixin Signal!( string, string );
-
 	final void updateMatrix()
 	{
 		auto newMatrix = new Matrix!4;
@@ -98,9 +96,4 @@ public:
 private:
 	Matrix!4 _matrix;
 	bool _matrixIsDirty;
-
-	final void setMatrixDirty( string prop, string newVal )
-	{
-		_matrixIsDirty = true;
-	}
 }

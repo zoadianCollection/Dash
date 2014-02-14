@@ -2,7 +2,7 @@ module math.vector;
 import core.properties;
 
 import std.math;
-import std.signals, std.conv, std.typetuple, std.traits;
+import std.conv, std.typetuple, std.traits;
 
 alias Vector!2 Vector2;
 alias Vector!3 Vector3;
@@ -213,8 +213,6 @@ public:
 
 	/// Stores the values in the vector
 	float[ S ] values;
-
-	mixin Signal!( string, string );
 }
 
 // Creates a range from start inclusive to end exclusive.

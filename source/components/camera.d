@@ -7,7 +7,7 @@ import components.component;
 import graphics.shaders.shader;
 import math.matrix, math.vector;
 
-import std.signals, std.conv;
+import std.conv;
 
 final class Camera : Component
 {
@@ -16,14 +16,12 @@ public:
 	 * The view matrix of the camera.
 	 */
 	mixin DirtyProperty!( "Matrix!4", "viewMatrix", "updateViewMatrix" );
-	
-	mixin Signal!( string, string );
 
 	this( GameObject owner )
 	{
 		super( owner );
 
-		owner.transform.connect( &this.setMatrixDirty );
+		owner.transform.connect( &setMatrixDirty );
 	}
 
 	override void update() { }
@@ -60,6 +58,7 @@ private:
 	{
 		_viewMatrixIsDirty = true;
 	}
+
 	final void updateViewMatrix()
 	{
 		auto up = owner.transform.rotation.matrix * Vector!3.up;

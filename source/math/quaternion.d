@@ -2,8 +2,7 @@ module math.quaternion;
 import core.properties;
 import math.matrix, math.vector;
 
-import std.signals, std.conv;
-import std.math;
+import std.conv, std.math;
 
 final class Quaternion
 {
@@ -55,8 +54,6 @@ public:
 
 		return res;
 	}
-
-	mixin Signal!( string, string );
 
 	mixin EmmittingPropertySetDirty!( "float", "x", "matrix", "public" );
 	mixin EmmittingPropertySetDirty!( "float", "y", "matrix", "public" );
