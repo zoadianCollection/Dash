@@ -20,8 +20,6 @@ public:
 	this( GameObject owner )
 	{
 		super( owner );
-
-		owner.transform.connect( &setMatrixDirty );
 	}
 
 	override void update() { }

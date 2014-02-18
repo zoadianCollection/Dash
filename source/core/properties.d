@@ -5,15 +5,39 @@
  */
 module core.properties;
 
-public:
+mixin template Properties()
+{
+	ref T property( T, string field )()
+	{
+		mixin( "return " ~ field ~ ";" );
+	}
+
+	ref auto property( alias field )()
+	{
+		return field;
+	}
+
+	void property( T, string field )( T newVal )
+	{
+		mixin( field ~ " = newVal;" );
+	}
+
+	void property( alias field )( typeof(field) newVal )
+	{
+		if( field != newVal )
+			field = newVal;
+	}
+}
+
+//deprecated:
 /**
- * Create a property.
- * Params:
- * 		type = 			The type of the object.
- * 		name =			The name of the property.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property.
+* Params:
+* 		type = 			The type of the object.
+* 		name =			The name of the property.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template Property( string type, string name, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Field!( type, name ) );
@@ -22,14 +46,14 @@ mixin template Property( string type, string name, string setterAccess = "privat
 }
 
 /**
- * Create a property backed by a field.
- * Params:
- * 		type = 			The type of the object.
- * 		field =			The name of the field backing the property
- * 		name =			The name of the property.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property backed by a field.
+* Params:
+* 		type = 			The type of the object.
+* 		field =			The name of the field backing the property
+* 		name =			The name of the property.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template BackedProperty( string type, string field, string name, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Getter!( type, name, field ) );
@@ -37,13 +61,13 @@ mixin template BackedProperty( string type, string field, string name, string se
 }
 
 /**
- * Create a property that emits when set.
- * Params:
- * 		type = 			The type of the object.
- * 		name =			The name of the property.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that emits when set.
+* Params:
+* 		type = 			The type of the object.
+* 		name =			The name of the property.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template EmmittingProperty( string type, string name, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Field!( type, name ) );
@@ -52,14 +76,14 @@ mixin template EmmittingProperty( string type, string name, string setterAccess 
 }
 
 /**
- * Create a property backed by a field that emits when set.
- * Params:
- * 		type = 			The type of the object.
- * 		field =			The name of the field backing the property.
- * 		name =			The name of the property.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property backed by a field that emits when set.
+* Params:
+* 		type = 			The type of the object.
+* 		field =			The name of the field backing the property.
+* 		name =			The name of the property.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template EmmittingBackedProperty( string type, string field, string name, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Getter!( type, name, field ) );
@@ -67,14 +91,14 @@ mixin template EmmittingBackedProperty( string type, string field, string name, 
 }
 
 /**
- * Create a property that can be marked as dirty.
- * Params:
- * 		type = 			The type of the object.
- * 		name =			The name of the property.
- * 		updateFunc =	The name of the function to call when the property is dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that can be marked as dirty.
+* Params:
+* 		type = 			The type of the object.
+* 		name =			The name of the property.
+* 		updateFunc =	The name of the function to call when the property is dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template DirtyProperty( string type, string name, string updateFunc, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Field!( type, name ) );
@@ -84,15 +108,15 @@ mixin template DirtyProperty( string type, string name, string updateFunc, strin
 }
 
 /**
- * Create a property that is backed by a field, and can be marked as dirty.
- * Params:
- * 		type = 			The type of the object.
- *		field =			The name of the field backing the property.
- * 		name =			The name of the property.
- * 		updateFunc =	The name of the function to call when the property is dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that is backed by a field, and can be marked as dirty.
+* Params:
+* 		type = 			The type of the object.
+*		field =			The name of the field backing the property.
+* 		name =			The name of the property.
+* 		updateFunc =	The name of the function to call when the property is dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template BackedDirtyProperty( string type, string field, string name, string updateFunc, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( IsDirtyField!name );
@@ -101,14 +125,14 @@ mixin template BackedDirtyProperty( string type, string field, string name, stri
 }
 
 /**
- * Create a property that can be marked as dirty, and emits when set.
- * Params:
- * 		type = 			The type of the object.
- * 		name =			The name of the property.
- * 		updateFunc =	The name of the function to call when the property is dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that can be marked as dirty, and emits when set.
+* Params:
+* 		type = 			The type of the object.
+* 		name =			The name of the property.
+* 		updateFunc =	The name of the function to call when the property is dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template EmmittingDirtyProperty( string type, string name, string updateFunc, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Field!( type, name ) );
@@ -118,15 +142,15 @@ mixin template EmmittingDirtyProperty( string type, string name, string updateFu
 }
 
 /**
- * Create a property that is backed by a field, can be marked as dirty, and emits when set.
- * Params:
- * 		type = 			The type of the object.
- * 		field =			The name of the field backing the property.
- * 		name =			The name of the property.
- * 		updateFunc =	The name of the function to call when the property is dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that is backed by a field, can be marked as dirty, and emits when set.
+* Params:
+* 		type = 			The type of the object.
+* 		field =			The name of the field backing the property.
+* 		name =			The name of the property.
+* 		updateFunc =	The name of the function to call when the property is dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template BackedEmmittingDirtyProperty( string type, string field, string name, string updateFunc, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( IsDirtyField!name );
@@ -135,14 +159,14 @@ mixin template BackedEmmittingDirtyProperty( string type, string field, string n
 }
 
 /**
- * Create a property that marks another property as dirty when set.
- * Params:
- * 		type = 			The type of the object.
- * 		name =			The name of the property.
- * 		dirtyProp =		Name of the property to mark dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that marks another property as dirty when set.
+* Params:
+* 		type = 			The type of the object.
+* 		name =			The name of the property.
+* 		dirtyProp =		Name of the property to mark dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template PropertySetDirty( string type, string name, string dirtyProp, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Field!( type, name ) );
@@ -151,14 +175,14 @@ mixin template PropertySetDirty( string type, string name, string dirtyProp, str
 }
 
 /**
- * Create a property that marks another property as dirty when set, and emits when set.
- * Params:
- * 		type = 			The type of the object.
- * 		name =			The name of the property.
- * 		dirtyProp =		Name of the property to mark dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that marks another property as dirty when set, and emits when set.
+* Params:
+* 		type = 			The type of the object.
+* 		name =			The name of the property.
+* 		dirtyProp =		Name of the property to mark dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template EmmittingPropertySetDirty( string type, string name, string dirtyProp, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Field!( type, name ) );
@@ -167,15 +191,15 @@ mixin template EmmittingPropertySetDirty( string type, string name, string dirty
 }
 
 /**
- * Create a property that marks another property as dirty when set, and is backed by a field.
- * Params:
- * 		type = 			The type of the object.
- * 		field =			The name of the field backing the property.
- * 		name =			The name of the property.
- * 		dirtyProp =		Name of the property to mark dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that marks another property as dirty when set, and is backed by a field.
+* Params:
+* 		type = 			The type of the object.
+* 		field =			The name of the field backing the property.
+* 		name =			The name of the property.
+* 		dirtyProp =		Name of the property to mark dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template BackedPropertySetDirty( string type, string field, string name, string dirtyProp, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Getter!( type, name, field ) );
@@ -183,15 +207,15 @@ mixin template BackedPropertySetDirty( string type, string field, string name, s
 }
 
 /**
- * Create a property that is backed by a field, emits when set, and marks another property as dirty when set.
- * Params:
- * 		type = 			The type of the object.
- * 		field =			The name of the field backing the property.
- * 		name =			The name of the property.
- * 		dirtyProp =		Name of the property to mark dirty.
- * 		setterAccess =	[private] The access modifier of the setter.
- * 		checkExpr =		[true] The expression to evaluate when setting the property.
- */
+* Create a property that is backed by a field, emits when set, and marks another property as dirty when set.
+* Params:
+* 		type = 			The type of the object.
+* 		field =			The name of the field backing the property.
+* 		name =			The name of the property.
+* 		dirtyProp =		Name of the property to mark dirty.
+* 		setterAccess =	[private] The access modifier of the setter.
+* 		checkExpr =		[true] The expression to evaluate when setting the property.
+*/
 mixin template BackedEmmittingPropertySetDirty( string type, string field, string name, string dirtyProp, string setterAccess = "private", string checkExpr = "true" )
 {
 	mixin( Getter!( type, name, field ) );
@@ -246,7 +270,7 @@ template SetterCond( string setCond, string name, string fieldName )
 }
 template SetterEmit( string name )
 {
-	immutable char[] SetterEmit = "emit( \"" ~ name ~ "\", to!string( _newVal ) );";
+	immutable char[] SetterEmit = "";//"emit( \"" ~ name ~ "\", to!string( _newVal ) );";
 }
 template Setter( string access, string type, string name, string setCond, string fieldName = "" )
 {

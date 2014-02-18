@@ -9,8 +9,9 @@ import utility.config;
 import math.transform, math.vector, math.quaternion;
 
 import yaml;
-
 import std.conv, std.variant;
+
+mixin Properties;
 
 class GameObject
 {
@@ -18,23 +19,32 @@ public:
 	/**
 	 * The current transform of the object.
 	 */
-	mixin Property!( "Transform", "transform", "public" );
+	alias getter!transform_ transform;
+	alias setter!transform_ transform; /// ditto
+
 	/**
 	 * The Material belonging to the object
 	 */
-	mixin Property!( "Material", "material", "public" );
+	alias getter!material_ material;
+	alias setter!material_ material; /// ditto
+
 	/**
 	 * The Mesh belonging to the object
 	 */
-	mixin Property!( "Mesh", "mesh", "public" );
+	alias getter!mesh_ mesh;
+	alias setter!mesh_ mesh; /// ditto
+
 	/**
 	 * The object that this object belongs to
 	 */
-	mixin Property!( "GameObject", "parent" );
+	alias getter!parent_ parent;
+	alias setter!parent_ parent; /// ditto
+
 	/**
 	 * All of the objects which list this as parent
 	 */
-	mixin Property!( "GameObject[]", "children" );
+	alias getter!children_ children;
+	alias setter!children_ children; /// ditto
 
 	/**
 	 * Create a GameObject from a Yaml node.
@@ -94,7 +104,6 @@ public:
 	this()
 	{
 		transform = new Transform( this );
-		transform.connect( &emit );
 	}
 
 	~this()
@@ -161,7 +170,7 @@ public:
 
 	final void addChild( GameObject object )
 	{
-		object._children ~= object;
+		object.children ~= object;
 		object.parent = this;
 	}
 
@@ -175,5 +184,10 @@ public:
 	void onCollision( GameObject other ) { }
 
 private:
+	Transform transform_;
+	Material material_;
+	Mesh mesh_;
+	GameObject parent_;
+	GameObject[] children_;
 	Component[ClassInfo] componentList;
 }

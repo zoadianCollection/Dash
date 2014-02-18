@@ -4,6 +4,8 @@ import math.vector, math.matrix, math.quaternion;
 
 import std.conv;
 
+mixin Properties;
+
 class Transform
 {
 public:
@@ -15,16 +17,7 @@ public:
 		rotation = new Quaternion;
 		scale = new Vector!3( 1.0, 1.0, 1.0);
 
-		position.connect( &emit );
-		rotation.connect( &emit );
-		scale.connect( &emit );
-
 		updateMatrix();
-
-		position.connect( &setMatrixDirty );
-		rotation.connect( &setMatrixDirty );
-		scale.connect( &setMatrixDirty );
-		connect( &setMatrixDirty );
 	}
 
 	~this()
@@ -34,7 +27,9 @@ public:
 		destroy( scale );
 	}
 
-	mixin Property!( "GameObject", "owner" );
+	alias property!owner_ owner;
+	//alias setter!owner_ owner; // ditto
+
 	mixin EmmittingProperty!( "Vector!3", "position", "public" );
 	mixin EmmittingProperty!( "Quaternion", "rotation", "public" );
 	mixin EmmittingProperty!( "Vector!3", "scale", "public" );
@@ -94,6 +89,7 @@ public:
 	}
 
 private:
+	GameObject owner_;
 	Matrix!4 _matrix;
 	bool _matrixIsDirty;
 }
